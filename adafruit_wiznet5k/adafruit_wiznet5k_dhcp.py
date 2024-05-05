@@ -210,7 +210,6 @@ class DHCP:
         self.dns_server_ip = _UNASSIGNED_IP_ADDR
         self._renew = None
         self._increment_transaction_id()
-        self._start_time = time.monotonic()
         self._start_ticks = ticks_ms()
 
     def _increment_transaction_id(self) -> None:
@@ -223,7 +222,7 @@ class DHCP:
 
         The interval is calculated as an exponential fallback with a random variation to
         prevent DHCP packet collisions. This timeout is intended to be compared with
-        time.monotonic().
+        ticks_ms().
 
         :param int attempt: The current attempt, used as the exponent for calculating the
             timeout.
@@ -414,7 +413,6 @@ class DHCP:
             if self._dhcp_state == _STATE_RENEWING:
                 debug_msg("FSM state is RENEWING.", self._debug)
                 self._renew = "renew"
-                self._start_time = time.monotonic()
                 self._start_ticks = ticks_ms()
                 self._dhcp_state = _STATE_REQUESTING
 
@@ -422,7 +420,6 @@ class DHCP:
                 debug_msg("FSM state is REBINDING.", self._debug)
                 self._renew = "rebind"
                 self.dhcp_server_ip = _BROADCAST_SERVER_ADDR
-                self._start_time = time.monotonic()
                 self._start_ticks = ticks_ms()
                 self._dhcp_state = _STATE_REQUESTING
 
